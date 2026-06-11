@@ -2,19 +2,43 @@ Projet CCI-Lorient — raccourcis Make
 
 Utilisation rapide depuis le dossier racine du dépôt (cci-lorient) :
 
-Commandes utiles :
+Télécharger le script d'installation
 
-```bash
-make download   # télécharge les dépendances frontend et backend
-make up         # installe, corrige les vulnérabilités et build le projet
-make help       # affiche l'aide
+Pour simplifier l'installation, téléchargez uniquement le script adapté à votre système depuis le dépôt et exécutez-le.
+
+Windows (PowerShell) :
+```powershell
+# Télécharger start.ps1 depuis GitHub (remplacez par l'URL de raw du fichier)
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/cs2i-kevin-boedec/ProjetBibliCICD/main/start.ps1" -OutFile .\start.ps1
+# Lancer le script (commande prête à copier/coller)
+.\start.ps1
 ```
 
-Notes:
-- Le frontend se trouve dans `front-bibliotheque`.
-- Le backend Maven se trouve dans `projetBibliotheque/bibliotheque`.
-- `make download` utilise `npm ci` pour le frontend et `mvn dependency:go-offline` pour le backend.
-- `make up` exécute `npm install`, `npm audit fix`, puis build Maven (sans tests) et `npm run build`.
+Windows (Invite de commandes) :
+```cmd
+REM Télécharger start.bat depuis GitHub (ou copier le fichier) puis :
+start.bat
+```
+
+macOS / Linux / WSL :
+```bash
+# Télécharger start.sh depuis GitHub (remplacez par l'URL de raw du fichier)
+curl -L -o start.sh https://raw.githubusercontent.com/cs2i-kevin-boedec/ProjetBibliCICD/main/start.sh
+chmod +x start.sh
+./start.sh
+```
+
+Pour arrêter le projet (commande prête à copier/coller) :
+
+PowerShell :
+```powershell
+.\stop.ps1
+```
+
+macOS / Linux / WSL :
+```bash
+./stop.sh
+```
 # 📚 Projet Bibliothèque - DevSecOps
 
 ## 🎯 Vue d'ensemble
