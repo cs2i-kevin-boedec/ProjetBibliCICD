@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd front-bibliotheque
-          npm ci
+          npm install
 
   build:
     name: Build
@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd front-bibliotheque
-          npm ci
+          npm install
 
       - name: Build
         run: |
@@ -75,7 +75,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd front-bibliotheque
-          npm ci
+          npm install
 
       - name: Lint
         run: |
@@ -98,7 +98,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd front-bibliotheque
-          npm ci
+          npm install
 
       - name: Test
         run: |
