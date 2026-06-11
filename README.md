@@ -39,9 +39,9 @@ macOS / Linux / WSL :
 ```bash
 ./stop.sh
 ```
-# 📚 Projet Bibliothèque - DevSecOps
+#  Projet Bibliothèque - DevSecOps
 
-## 🎯 Vue d'ensemble
+##  Vue d'ensemble
 
 Système de gestion de bibliothèque avec architecture microservices et pipeline DevSecOps automatisée.
 
@@ -111,29 +111,72 @@ cd projetBibliCICD
 # si nécessaire : chmod +x start.sh
 ```
 
-Les scripts exécutent `docker compose up --build -d` (ou `docker-compose up --build -d` si la commande moderne n'est pas disponible).
+Les scripts `start.ps1`, `start.sh` et `start.bat` lancent le projet en appelant
+exclusivement le fichier `ProjetBibliotheque/docker-compose.yml` (le compose
+central se trouve dans `ProjetBibliotheque`). Ils utilisent `docker compose up --build -d`
+ou basculent sur `docker-compose up --build -d` si la commande moderne n'est pas disponible.
+
+Important : les scripts ne cherchent plus de `docker-compose.yml` à la racine —
+utilisez uniquement `ProjetBibliotheque/docker-compose.yml`.
 
 Clonage automatique des dépôts
 - Les scripts vérifient la présence des dossiers `front-bibliotheque` et `ProjetBibliotheque`.
 - Si un dossier manque, le script propose de cloner le dépôt correspondant via une invite interactive.
-- Vous pouvez pré-fournir les URLs via les variables d'environnement `FRONTEND_REPO` et `BACKEND_REPO` pour éviter l'invite.
+- Pour automatiser le clonage sans invite, exportez les variables d'environnement
+  `FRONTEND_REPO` et `BACKEND_REPO` avant d'exécuter le script.
 
 Exemples (PowerShell) :
 ```powershell
-# Exécuter et entrer les URLs lorsque demandé :
+# Lancer (invite si dépôts manquants) :
 .\start.ps1
 
-# Ou fournir les URLs en amont :
+# Ou fournir les URLs en amont (aucune invite) :
 $env:FRONTEND_REPO = 'https://github.com/monorg/front-bibliotheque.git'
-$env:BACKEND_REPO = 'https://github.com/monorg/ProjetBibliotheque.git'
+$env:BACKEND_REPO  = 'https://github.com/monorg/ProjetBibliotheque.git'
 .\start.ps1
 ```
 
-Pour arrêter les services :
+Exemples (Bash) :
+```bash
+# Lancer (invite si dépôts manquants) :
+./start.sh
 
+# Ou fournir les URLs en amont (aucune invite) :
+export FRONTEND_REPO='https://github.com/monorg/front-bibliotheque.git'
+export BACKEND_REPO='https://github.com/monorg/ProjetBibliotheque.git'
+./start.sh
 ```
-docker compose down
+
+Exemples (CMD) :
+```cmd
+:: Lancer :
+start.bat
+:: (Pour fournir les URL, définir les variables d'environnement système avant)
 ```
+
+Arrêt propre des services
+- Utilisez les scripts d'arrêt fournis (ils appellent `docker compose down --volumes --remove-orphans` sur
+`ProjetBibliotheque/docker-compose.yml`) :
+
+PowerShell :
+```powershell
+.\stop.ps1
+```
+
+Bash :
+```bash
+./stop.sh
+```
+
+CMD :
+```cmd
+stop.bat
+```
+
+Remarque tempo
+- Un dossier `tempo/` a été utilisé pour des tests locaux. Il est uniquement
+à titre temporaire et peut être ignoré ou supprimé — les scripts définitifs
+se trouvent à la racine du dépôt.
 
 
 ### En Développement Local
