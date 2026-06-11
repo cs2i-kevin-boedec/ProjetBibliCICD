@@ -104,3 +104,43 @@ jobs:
         run: |
           cd front-bibliotheque
           npm test --if-present
+
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: |
+          cd front-bibliotheque
+          npm ci
+
+      - name: Install Playwright browsers
+        run: |
+          cd front-bibliotheque
+          npx playwright install --with-deps
+
+      - name: Build for E2E
+        run: |
+          cd front-bibliotheque
+          npm run build --if-present
+
+      - name: Serve built app
+        run: |
+          cd front-bibliotheque
+          if [ -d dist/front-bibliotheque ]; then npx http-server dist/front-bibliotheque -p 4173 &
+          else npx http-server dist -p 4173 & fi
+          sleep 3
+
+      - name: Run Playwright tests
+        run: |
+          cd front-bibliotheque
+          npx playwright test
