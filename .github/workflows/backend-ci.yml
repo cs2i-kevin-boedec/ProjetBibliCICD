@@ -34,6 +34,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Package (skip tests)
         run: |
@@ -53,6 +54,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Run tests
         run: |

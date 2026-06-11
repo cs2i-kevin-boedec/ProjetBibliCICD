@@ -48,6 +48,11 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Install dependencies
+        run: |
+          cd front-bibliotheque
+          npm ci
+
       - name: Build
         run: |
           cd front-bibliotheque
@@ -66,6 +71,11 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Install dependencies
+        run: |
+          cd front-bibliotheque
+          npm ci
+
       - name: Lint
         run: |
           cd front-bibliotheque
@@ -83,6 +93,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Install dependencies
+        run: |
+          cd front-bibliotheque
+          npm ci
 
       - name: Test
         run: |
