@@ -6,17 +6,7 @@ where docker >nul 2>nul || (
 )
 
 pushd "%~dp0"
-set COMPOSE_FILE=%~dp0docker-compose.yml
-if not exist "%COMPOSE_FILE%" (
-  if exist "%~dp0\ProjetBibliotheque\docker-compose.yml" (
-    set COMPOSE_FILE=%~dp0\ProjetBibliotheque\docker-compose.yml
-  ) else (
-    echo Aucun docker-compose.yml trouvé dans le dossier racine ni dans ProjetBibliotheque.
-    popd
-    exit /b 1
-  )
-)
-REM Clonage automatique si git est disponible et si les dossiers manquent
+REM Clonage automatique des dépôts si manquants
 where git >nul 2>nul
 if %ERRORLEVEL%==0 (
   if not exist "%~dp0front-bibliotheque" (
@@ -35,6 +25,14 @@ if %ERRORLEVEL%==0 (
       if not "%BEURL%"=="" git clone %BEURL% "%~dp0ProjetBibliotheque"
     )
   )
+)
+
+REM Utiliser uniquement docker-compose dans ProjetBibliotheque
+set COMPOSE_FILE=%~dp0\ProjetBibliotheque\docker-compose.yml
+if not exist "%COMPOSE_FILE%" (
+  echo docker-compose.yml introuvable dans ProjetBibliotheque.
+  popd
+  exit /b 1
 )
 
 docker compose -f "%COMPOSE_FILE%" up --build -d || docker-compose -f "%COMPOSE_FILE%" up --build -d

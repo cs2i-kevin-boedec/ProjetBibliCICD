@@ -1,68 +1,77 @@
 #!/usr/bin/env pwsh
 <#
-start.ps1 - Démarre les services Docker du projet en une commande
+start.ps1 - Clone le projet si necessaire puis lance Docker
 #>
+
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
-  Write-Error "Docker n'est pas installé ou introuvable dans PATH. Installez Docker Desktop et relancez."
-  exit 1
+    Write-Error "Docker est introuvable dans le PATH."
+    exit 1
 }
 
-# Vérifier et cloner les dépôts frontend/backend si nécessaire
-function Clone-IfMissing($dirName, $envVarName, $promptText) {
-  $target = Join-Path $PSScriptRoot $dirName
-  if (Test-Path $target) { return }
-
-  if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Error "Git introuvable. Installez Git pour permettre le clonage automatique, ou clonez manuellement les dépôts dans $dirName."
-    return
-  }
-
-  $repoUrl = $env:$envVarName
-  if ([string]::IsNullOrWhiteSpace($repoUrl)) {
-    $repoUrl = Read-Host "$promptText (URL Git) — laisser vide pour ignorer"
-  }
-  if ([string]::IsNullOrWhiteSpace($repoUrl)) {
-    Write-Host "Aucun URL fourni — saut du clonage pour $dirName"
-    return
-  }
-
-  Write-Host "Clonage de $repoUrl dans $dirName..."
-  git clone $repoUrl $target
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    Write-Error "Git est introuvable dans le PATH."
+    exit 1
 }
 
-Clone-IfMissing 'front-bibliotheque' 'FRONTEND_REPO' 'URL du dépôt frontend'
-Clone-IfMissing 'ProjetBibliotheque' 'BACKEND_REPO' 'URL du dépôt backend'
+$repoUrl = "https://github.com/cs2i-kevin-boedec/ProjetBibliCICD.git"
+$repoFolder = "ProjetBibliCICD"
+$repoPath = Join-Path $PSScriptRoot $repoFolder
 
-Push-Location $PSScriptRoot
-try {
-  $composeCmd = "docker-compose"
-  $composeAvailable = $false
-  try {
-    & docker compose version > $null 2>&1
-    if ($LASTEXITCODE -eq 0) { $composeAvailable = $true }
-  } catch {
-    $composeAvailable = $false
-  }
-  if ($composeAvailable) { $composeCmd = "docker compose" }
+if (-not (Test-Path $repoPath)) {
+    Write-Host "Clonage du depot..."
+    git clone $repoUrl $repoPath
 
-  Write-Host ('Execution : {0} up --build -d' -f $composeCmd)
-  # Cherche un fichier docker-compose.yml
-  $composeFile = Join-Path $PSScriptRoot 'docker-compose.yml'
-  if (-not (Test-Path $composeFile)) {
-    $alt = Join-Path $PSScriptRoot 'ProjetBibliotheque\docker-compose.yml'
-    if (Test-Path $alt) { $composeFile = $alt } else {
-      Write-Error "Aucun fichier docker-compose.yml trouvé dans le dossier racine ni dans ProjetBibliotheque."
-      exit 1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Impossible de cloner le depot."
+        exit 1
     }
-  }
+}
+else {
+    Write-Host "Depot deja present."
+}
 
-  if ($composeCmd -eq "docker compose") {
-    & docker compose -f $composeFile up --build -d
-  } else {
-    & docker-compose -f $composeFile up --build -d
-  }
+Push-Location $repoPath
 
-  Write-Host 'Services demarres - Frontend: http://localhost  Backend: http://localhost:8080  PostgreSQL:5432'
-} finally {
-  Pop-Location
+try {
+    # Utiliser uniquement le docker-compose.yml dans ProjetBibliotheque
+    $composeFile = Join-Path $repoPath "ProjetBibliotheque\docker-compose.yml"
+    if (-not (Test-Path $composeFile)) {
+        Write-Error "docker-compose.yml introuvable dans $repoPath\ProjetBibliotheque"
+        exit 1
+    }
+    Write-Host "Utilisation du fichier compose : $composeFile"
+
+    $useDockerComposeV2 = $false
+
+    try {
+        & docker compose version *> $null
+        if ($LASTEXITCODE -eq 0) {
+            $useDockerComposeV2 = $true
+        }
+    }
+    catch {
+        $useDockerComposeV2 = $false
+    }
+
+    if ($useDockerComposeV2) {
+        Write-Host "Demarrage avec docker compose..."
+        docker compose -f $composeFile up --build -d
+    }
+    else {
+        Write-Host "Demarrage avec docker-compose..."
+        docker-compose -f $composeFile up --build -d
+    }
+
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host ""
+        Write-Host "Services demarres."
+        Write-Host "Frontend : http://localhost"
+        Write-Host "Backend  : http://localhost:8080"
+    }
+    else {
+        Write-Error "Erreur lors du lancement des conteneurs."
+    }
+}
+finally {
+    Pop-Location
 }
