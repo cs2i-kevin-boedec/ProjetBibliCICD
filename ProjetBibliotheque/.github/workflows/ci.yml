@@ -1,0 +1,55 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/bibliotheque-back
+
+jobs:
+  build-test:
+    name: Build and test backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Setup Java
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Give execute permission to mvnw
+        working-directory: bibliotheque
+        run: chmod +x mvnw
+
+      - name: Build and run tests
+        working-directory: bibliotheque
+        run: ./mvnw clean verify
+
+      - name: Build Docker Image
+        run: docker build -t ${{ env.IMAGE_NAME }}:latest -t ${{ env.IMAGE_NAME }}:${{ github.sha }} ./bibliotheque
+
+      - name: Login to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7d63
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker Image
+        if: github.event_name == 'push'
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Logout from Docker Hub
+        if: always()
+        run: docker logout

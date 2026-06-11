@@ -1,0 +1,17 @@
+@startuml
+title Connexion / première connexion
+actor Acteur
+participant Systeme as "Système"
+
+Acteur -> "Système" : Saisir identifiant / mot de passe
+alt Première connexion
+  "Système" --> Acteur : Demande changement mot de passe
+  Acteur -> "Système" : Nouveau mot de passe
+end
+"Système" -> "Système" : Vérifier identifiants
+alt Accès autorisé
+  "Système" --> Acteur : Connexion réussie
+else Accès refusé
+  "Système" --> Acteur : Erreur d'authentification
+end
+@enduml

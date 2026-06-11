@@ -1,0 +1,76 @@
+<section class="page-section">
+  <h1 class="text-center mb-4">Liste des ouvrages</h1>
+
+  <section class="form-container-large">
+    <h2>Recherche</h2>
+
+    <div class="form-group">
+      <label>
+        Titre
+        <input [(ngModel)]="titre" name="titre" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Auteur
+        <input [(ngModel)]="auteur" name="auteur" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Année de publication
+        <input [(ngModel)]="anneePublication" name="anneePublication" type="number" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Thème
+        <input [(ngModel)]="theme" name="theme" />
+      </label>
+    </div>
+
+    <div class="d-flex gap-2 mt-3 flex-wrap">
+      <button type="button" class="btn btn-primary" (click)="rechercher()">
+        Rechercher
+      </button>
+
+      <button type="button" class="btn btn-secondary" (click)="resetRecherche()">
+        Réinitialiser
+      </button>
+    </div>
+  </section>
+
+  @if (message()) {
+    <p class="message message-success">{{ message() }}</p>
+  }
+
+  @if (ouvrages().length === 0) {
+    <p class="text-center">Aucun ouvrage trouvé.</p>
+  } @else {
+    @for (o of ouvrages(); track o.id) {
+      <article class="card-custom">
+        <h3>{{ o.titre }}</h3>
+        <p>Type : {{ o.type }}</p>
+        <p>Auteur : {{ o.auteur || '-' }}</p>
+        <p>Thème : {{ o.theme }}</p>
+        <p>Caution : {{ o.caution }}</p>
+        <p>Disponibles : {{ o.nombreExemplairesDisponibles }}</p>
+
+        @if (authService.isUtilisateur()) {
+          <div class="d-flex gap-2 mt-3">
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="emprunter(o)"
+              [disabled]="o.nombreExemplairesDisponibles === 0">
+              Emprunter
+            </button>
+          </div>
+        }
+      </article>
+    }
+  }
+</section>

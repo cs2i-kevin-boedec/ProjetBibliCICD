@@ -1,0 +1,15 @@
+@startuml
+title Création de compte
+actor Utilisateur
+actor Bibliothecaire as "Bibliothécaire"
+participant Systeme as "Système"
+
+Utilisateur -> "Bibliothécaire" : Demande de création de compte
+"Bibliothécaire" -> "Système" : Demande formulaire de création
+"Système" --> "Bibliothécaire" : Formulaire
+"Bibliothécaire" --> Utilisateur : Formulaire à compléter
+Utilisateur -> "Bibliothécaire" : Formulaire rempli + caution
+"Bibliothécaire" -> "Système" : Créer utilisateur + compte
+"Système" --> "Bibliothécaire" : Compte créé
+"Bibliothécaire" --> Utilisateur : Confirmation création compte
+@enduml

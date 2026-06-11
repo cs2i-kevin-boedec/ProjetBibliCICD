@@ -1,0 +1,85 @@
+<section class="page-section">
+  <h1 class="text-center mb-4">Enregistrer un retour</h1>
+
+  <section class="form-container-large">
+    <div class="form-group">
+      <label>
+        Nom ou prénom de l'utilisateur
+        <input [(ngModel)]="rechercheUtilisateur" name="rechercheUtilisateur" />
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" (click)="rechercherUtilisateurs()">Rechercher</button>
+    </div>
+  </section>
+
+  @if (utilisateurs().length > 0) {
+    <section class="form-container-large">
+      <div class="form-group">
+        <label>
+          Utilisateur
+          <select [(ngModel)]="utilisateurSelectionneId" name="utilisateurSelectionneId">
+            <option [ngValue]="null">-- Sélectionner un utilisateur --</option>
+            @for (u of utilisateurs(); track u.id) {
+              <option [ngValue]="u.id">
+                {{ u.prenom }} {{ u.nom }} ({{ u.typeUtilisateur }})
+              </option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="chargerEmpruntsActifs()">Charger les ouvrages empruntés</button>
+      </div>
+    </section>
+  }
+
+  @if (emprunts().length > 0) {
+    <form class="form-container-large" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>
+          Ouvrage à retourner
+          <select [(ngModel)]="empruntId" name="empruntId" (ngModelChange)="onEmpruntChange()">
+            <option [ngValue]="null">-- Sélectionner un ouvrage --</option>
+            @for (e of emprunts(); track e.id) {
+              <option [ngValue]="e.id">
+                {{ e.ouvrageTitre }} - retour prévu : {{ e.dateRetourPrevue }}
+              </option>
+            }
+          </select>
+        </label>
+      </div>
+
+      @if (empruntSelectionne()) {
+        <div class="info-card">
+          <p><strong>Emprunteur :</strong> {{ empruntSelectionne()!.utilisateurNomComplet }}</p>
+          <p><strong>Ouvrage :</strong> {{ empruntSelectionne()!.ouvrageTitre }}</p>
+          <p><strong>Date emprunt :</strong> {{ empruntSelectionne()!.dateEmprunt }}</p>
+          <p><strong>Date retour prévue :</strong> {{ empruntSelectionne()!.dateRetourPrevue }}</p>
+          <p><strong>Statut :</strong> {{ empruntSelectionne()!.statut }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>
+            État de l'exemplaire
+            <select [(ngModel)]="etatExemplaire" name="etatExemplaire">
+              <option value="BON">BON</option>
+              <option value="ABIME">ABIME</option>
+              <option value="HORS_SERVICE">HORS_SERVICE</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Valider le retour</button>
+        </div>
+      }
+    </form>
+  }
+
+  @if (message()) {
+    <p class="message message-success">{{ message() }}</p>
+  }
+</section>

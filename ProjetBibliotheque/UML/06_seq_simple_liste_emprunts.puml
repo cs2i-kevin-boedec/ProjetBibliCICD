@@ -1,0 +1,13 @@
+@startuml
+title Consultation de la liste des emprunts
+actor Utilisateur
+participant Systeme as "Système"
+
+Utilisateur -> "Système" : Consulter liste des emprunts
+"Système" -> "Système" : Vérifier connexion
+alt Autorisé
+  "Système" --> Utilisateur : Liste complète des emprunts
+else Erreur
+  "Système" --> Utilisateur : Accès refusé / erreur
+end
+@enduml

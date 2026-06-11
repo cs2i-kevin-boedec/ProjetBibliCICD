@@ -1,0 +1,29 @@
+@startuml
+title Création de compte — détaillé
+actor Utilisateur
+actor Bibliothecaire as "Bibliothécaire"
+boundary UI as "Interface Angular"
+control C as "UtilisateurController"
+control F as "UtilisateurFactory"
+control US as "UtilisateurService"
+database UR as "UtilisateurRepository"
+database CR as "CompteRepository"
+
+Utilisateur -> "Bibliothécaire" : Demande création compte
+"Bibliothécaire" -> UI : Ouvrir formulaire création
+UI --> "Bibliothécaire" : Formulaire affiché
+Utilisateur -> "Bibliothécaire" : Donne infos + type + caution
+"Bibliothécaire" -> UI : Saisir formulaire
+UI -> C : POST /utilisateurs
+C -> F : creerUtilisateur(type, dto)
+F --> C : Utilisateur spécialisé
+C -> US : creerUtilisateur(utilisateur, caution)
+US -> UR : save(utilisateur)
+UR --> US : utilisateurPersisté
+US -> CR : save(compte)
+CR --> US : comptePersisté
+US --> C : utilisateurCréé
+C --> UI : 201 Created
+UI --> "Bibliothécaire" : Confirmation création
+"Bibliothécaire" --> Utilisateur : Compte créé avec caution
+@enduml

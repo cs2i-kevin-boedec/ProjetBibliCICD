@@ -1,0 +1,17 @@
+@startuml
+title Retour d'ouvrage
+actor Utilisateur
+actor Bibliothecaire as "Bibliothécaire"
+participant Systeme as "Système"
+
+Utilisateur -> "Bibliothécaire" : Retourner ouvrage
+"Bibliothécaire" -> "Système" : Enregistrer retour
+"Système" -> "Système" : Vérifier retard / état
+alt Retour normal
+  "Système" --> "Bibliothécaire" : Retour validé
+  "Bibliothécaire" --> Utilisateur : Retour terminé
+else Retard ou dégradation
+  "Système" --> "Bibliothécaire" : Caution à prélever
+  "Bibliothécaire" --> Utilisateur : Information de retenue
+end
+@enduml

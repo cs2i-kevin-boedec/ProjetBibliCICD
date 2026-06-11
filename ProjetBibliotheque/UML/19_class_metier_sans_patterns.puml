@@ -1,0 +1,110 @@
+@startuml
+title Diagramme de classes métier — sans design patterns
+
+abstract class Utilisateur {
+  +Long id
+  +String nom
+  +String prenom
+  +String adresse
+  +String email
+  +String login
+  +String motDePasse
+  +boolean premiereConnexion
+  +seConnecter(login, motDePasse)
+}
+
+class Etudiant {
+  +int anneeUniversitaire
+}
+
+class Enseignant {
+  +String departement
+}
+
+class Particulier
+
+class Bibliothecaire {
+  +Long id
+  +String nom
+  +String prenom
+  +String email
+  +String login
+  +String motDePasse
+  +boolean premiereConnexion
+}
+
+class Compte {
+  +Long id
+  +double cautionDisponible
+  +debiter(montant)
+  +crediter(montant)
+  +peutEmprunter(cautionOuvrage) boolean
+}
+
+abstract class Ouvrage {
+  +Long id
+  +String titre
+  +String theme
+  +double caution
+  +getExemplaires()
+}
+
+class Livre {
+  +String auteur
+  +String isbn
+  +int anneePublication
+}
+
+class Revue {
+  +int numeroVolume
+  +Date dateParution
+}
+
+class Exemplaire {
+  +Long id
+  +String codeBarre
+  +EtatExemplaire etat
+  +boolean disponible
+  +estDisponible() boolean
+}
+
+class Emprunt {
+  +Long id
+  +Date dateEmprunt
+  +Date dateRetourPrevue
+  +Date dateRetourEffective
+  +StatutEmprunt statut
+  +estEnRetard() boolean
+  +retourner()
+}
+
+class Reservation {
+  +Long id
+  +Date dateReservation
+  +StatutReservation statut
+  +annuler()
+  +terminer()
+}
+
+class EmplacementStockage {
+  +Long id
+  +int travee
+  +int etagere
+  +String niveau
+  +String categorie
+}
+
+Utilisateur <|-- Etudiant
+Utilisateur <|-- Enseignant
+Utilisateur <|-- Particulier
+Ouvrage <|-- Livre
+Ouvrage <|-- Revue
+
+Utilisateur "1" --> "1" Compte : possède
+Utilisateur "1" --> "0..*" Emprunt : effectue
+Utilisateur "1" --> "0..*" Reservation : effectue
+Emprunt "0..*" --> "1" Exemplaire : concerne
+Reservation "0..*" --> "1" Ouvrage : porte sur
+Exemplaire "0..*" --> "1" Ouvrage : appartient à
+Ouvrage "0..*" --> "1" EmplacementStockage : stocké à
+@enduml

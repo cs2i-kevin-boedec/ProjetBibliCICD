@@ -1,0 +1,34 @@
+@startuml
+title Liste des retards + envoi de mails — détaillé
+actor Bibliothecaire as "Bibliothécaire"
+boundary UI as "Interface Angular"
+control LC as "RetardController"
+control LS as "RetardService"
+database EMR as "EmpruntRepository"
+control NS as "NotificationService"
+actor Utilisateur
+
+"Bibliothécaire" -> UI : Consulter emprunts en retard
+UI -> LC : GET /emprunts/retards
+LC -> LS : listerRetards()
+LS -> EMR : findEmpruntsEnRetard()
+EMR --> LS : listeRetards
+LS --> LC : listeRetards
+LC --> UI : 200 + liste
+UI --> "Bibliothécaire" : Afficher liste des retards
+
+"Bibliothécaire" -> UI : Cliquer envoyer relances
+UI -> LC : POST /emprunts/retards/relances
+LC -> LS : envoyerRelances()
+LS -> EMR : findEmpruntsEnRetard()
+EMR --> LS : listeRetards
+
+loop Pour chaque retard
+  LS -> NS : envoyerMail(utilisateur, emprunt)
+  NS --> Utilisateur : Mail de relance
+end
+
+LS --> LC : Relances envoyées
+LC --> UI : 200 OK
+UI --> "Bibliothécaire" : Confirmation d'envoi
+@enduml

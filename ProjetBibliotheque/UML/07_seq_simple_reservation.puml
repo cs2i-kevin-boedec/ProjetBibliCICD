@@ -1,0 +1,14 @@
+@startuml
+title Réservation d'ouvrage
+actor Utilisateur
+participant Systeme as "Système"
+
+Utilisateur -> "Système" : Demander réservation
+"Système" -> "Système" : Vérifier connexion
+"Système" -> "Système" : Vérifier disponibilité / règles
+alt Réservation possible
+  "Système" --> Utilisateur : Ouvrage réservé
+else Réservation impossible
+  "Système" --> Utilisateur : Motif de refus
+end
+@enduml

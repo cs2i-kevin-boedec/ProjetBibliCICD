@@ -1,0 +1,42 @@
+@startuml
+title Ajout d'un ouvrage + emplacement — détaillé
+actor Bibliothecaire as "Bibliothécaire"
+boundary UI as "Interface Angular"
+control OC as "OuvrageController"
+control OF as "OuvrageFactory"
+control OS as "OuvrageService"
+database OR as "OuvrageRepository"
+database ER as "ExemplaireRepository"
+database ESR as "EmplacementRepository"
+
+"Bibliothécaire" -> UI : Ouvrir formulaire ajout ouvrage
+alt Type livre
+  "Bibliothécaire" -> UI : Saisir titre, auteur, isbn, thème, caution, nb exemplaires, emplacement
+else Type revue
+  "Bibliothécaire" -> UI : Saisir titre, volume, date parution, thème, caution, nb exemplaires, emplacement
+end
+
+UI -> OC : POST /ouvrages
+OC -> OF : creerOuvrage(type, dto)
+OF --> OC : Livre ou Revue
+OC -> OS : creerOuvrage(ouvrage, emplacement, nbExemplaires)
+OS -> ESR : findOrCreate(emplacement)
+ESR --> OS : emplacementPersisté
+OS -> OR : save(ouvrage avec emplacement)
+OR --> OS : ouvragePersisté
+
+loop Pour chaque exemplaire
+  OS -> ER : save(exemplaire)
+  ER --> OS : exemplairePersisté
+end
+
+alt Succès
+  OS --> OC : Ouvrage créé
+  OC --> UI : 201 Created
+  UI --> "Bibliothécaire" : Ouvrage ajouté avec emplacement
+else Emplacement incohérent / erreur
+  OS --> OC : erreur
+  OC --> UI : 409/500
+  UI --> "Bibliothécaire" : Échec ajout ouvrage
+end
+@enduml

@@ -1,0 +1,21 @@
+<section class="page-section">
+  <h1 class="text-center mb-4">Mes emprunts</h1>
+
+  @if (message()) {
+    <p class="message message-success">{{ message() }}</p>
+  }
+
+  @if (emprunts().length === 0) {
+    <p class="text-center">Aucun emprunt à afficher.</p>
+  } @else {
+    @for (e of emprunts(); track e.id) {
+      <article class="card-custom">
+        <p><strong>Ouvrage :</strong> {{ e.ouvrageTitre }}</p>
+        <p><strong>Date emprunt :</strong> {{ e.dateEmprunt }}</p>
+        <p><strong>Date retour prévue :</strong> {{ e.dateRetourPrevue }}</p>
+        <p><strong>Date retour effective :</strong> {{ e.dateRetourEffective || '-' }}</p>
+        <p><strong>Statut :</strong> {{ e.statut }}</p>
+      </article>
+    }
+  }
+</section>

@@ -1,0 +1,46 @@
+@startuml
+title Réservation d'ouvrage — détaillé
+actor Utilisateur
+boundary UI as "Interface Angular"
+control RC as "ReservationController"
+control RS as "ReservationService"
+database UR as "UtilisateurRepository"
+database OR as "OuvrageRepository"
+database RR as "ReservationRepository"
+database EMR as "EmpruntRepository"
+
+Utilisateur -> UI : Réserver un ouvrage
+UI -> RC : POST /reservations
+RC -> RS : reserver(utilisateurId, ouvrageId)
+RS -> UR : findById(utilisateurId)
+UR --> RS : utilisateur
+RS -> OR : findById(ouvrageId)
+OR --> RS : ouvrage
+RS -> EMR : findEmpruntsActifsByUtilisateur(utilisateurId)
+EMR --> RS : empruntsActifs
+RS -> RS : Vérifier retard / doublon / disponibilité
+
+alt Réservation acceptée
+  RS -> RR : save(reservation)
+  RR --> RS : reservationCréée
+  RS --> RC : réservation confirmée
+  RC --> UI : 201 Created
+  UI --> Utilisateur : Réservation enregistrée
+else Ouvrage non trouvé
+  RS --> RC : erreur ouvrage inexistant
+  RC --> UI : 404
+  UI --> Utilisateur : Ouvrage non trouvé
+else Déjà en possession
+  RS --> RC : refus déjà emprunté
+  RC --> UI : 409
+  UI --> Utilisateur : Réservation refusée
+else Ouvrage déjà attribué / indisponible
+  RS --> RC : refus disponibilité
+  RC --> UI : 409
+  UI --> Utilisateur : Réservation refusée
+else Caution insuffisante ou retard
+  RS --> RC : refus règles métier
+  RC --> UI : 409
+  UI --> Utilisateur : Réservation refusée
+end
+@enduml

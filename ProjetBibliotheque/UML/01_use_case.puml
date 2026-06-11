@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+actor Utilisateur
+actor Bibliothecaire as "Bibliothécaire"
+
+rectangle "Système bibliothèque" {
+  usecase "Créer compte" as UC1
+  usecase "Se connecter" as UC2
+  usecase "Première connexion /\nchanger mot de passe" as UC3
+  usecase "Rechercher ouvrage" as UC4
+  usecase "Emprunter ouvrage" as UC5
+  usecase "Consulter liste emprunts" as UC6
+  usecase "Réserver ouvrage" as UC7
+  usecase "Retourner ouvrage" as UC8
+  usecase "Lister retards" as UC9
+  usecase "Envoyer mails relance" as UC10
+  usecase "Ajouter ouvrage" as UC11
+  usecase "Associer emplacement" as UC12
+}
+
+Utilisateur -- UC1
+Utilisateur -- UC2
+Utilisateur -- UC3
+Utilisateur -- UC4
+Utilisateur -- UC5
+Utilisateur -- UC6
+Utilisateur -- UC7
+Utilisateur -- UC8
+
+"Bibliothécaire" -- UC2
+"Bibliothécaire" -- UC8
+"Bibliothécaire" -- UC9
+"Bibliothécaire" -- UC10
+"Bibliothécaire" -- UC11
+
+UC5 .> UC2 : <<include>>
+UC5 .> UC4 : <<include>>
+UC6 .> UC2 : <<include>>
+UC7 .> UC2 : <<include>>
+UC8 .> UC2 : <<include>>
+UC9 .> UC2 : <<include>>
+UC10 .> UC9 : <<include>>
+UC11 .> UC2 : <<include>>
+UC11 .> UC12 : <<include>>
+UC3 .> UC2 : <<extend>>
+@enduml

@@ -1,0 +1,35 @@
+stages:
+  - build
+  - test
+  - security
+  - quality
+
+include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  GIT_DEPTH: "0"
+
+cache:
+  paths:
+    - .m2/repository
+
+build:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-21
+  script:
+    - mvn -f bibliotheque/pom.xml clean compile
+
+test:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-21
+  script:
+    - mvn -f bibliotheque/pom.xml test -Dspring.profiles.active=test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - bibliotheque/target/surefire-reports/*.xml
+    paths:
+      - bibliotheque/target/surefire-reports/

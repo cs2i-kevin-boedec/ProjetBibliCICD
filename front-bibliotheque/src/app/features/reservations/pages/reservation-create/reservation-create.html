@@ -1,0 +1,38 @@
+<section class="page-section">
+  <h1 class="text-center mb-4">Confirmation de réservation</h1>
+
+  @if (ouvrage()) {
+    <div class="info-card">
+      <p><strong>Ouvrage sélectionné :</strong> {{ ouvrage()!.titre }}</p>
+      <p><strong>Type :</strong> {{ ouvrage()!.type }}</p>
+      <p><strong>Auteur :</strong> {{ ouvrage()!.auteur || '-' }}</p>
+      <p><strong>Disponibles :</strong> {{ ouvrage()!.nombreExemplairesDisponibles }}</p>
+    </div>
+  } @else {
+    <p class="text-center">Chargement de l'ouvrage...</p>
+  }
+
+  <form class="form-container-large" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>
+        Réserver pour
+        <select [(ngModel)]="utilisateurId" name="utilisateurId">
+          <option [ngValue]="null">-- Sélectionner un utilisateur --</option>
+          @for (u of utilisateurs(); track u.id) {
+            <option [ngValue]="u.id">
+              {{ u.prenom }} {{ u.nom }} ({{ u.typeUtilisateur }})
+            </option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Valider la réservation</button>
+    </div>
+  </form>
+
+  @if (message()) {
+    <p class="message message-success">{{ message() }}</p>
+  }
+</section>

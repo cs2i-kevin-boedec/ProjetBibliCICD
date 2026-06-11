@@ -1,0 +1,26 @@
+<section class="page-section">
+  <h1 class="text-center mb-4">Emprunts en retard</h1>
+
+  <div class="text-center mb-4">
+    <button type="button" class="btn btn-danger" (click)="envoyerRelances()">
+      Envoyer les relances
+    </button>
+  </div>
+
+  @if (retards().length === 0) {
+    <p class="text-center">Aucun retard</p>
+  } @else {
+    @for (r of retards(); track r.id) {
+      <article class="card-custom">
+        <p><strong>{{ r.ouvrageTitre }}</strong></p>
+        <p>Emprunteur : {{ r.utilisateurNomComplet }}</p>
+        <p>Date retour prévue : {{ r.dateRetourPrevue }}</p>
+        <p>Statut : {{ r.statut }}</p>
+      </article>
+    }
+  }
+
+  @if (message()) {
+    <p class="message message-success">{{ message() }}</p>
+  }
+</section>

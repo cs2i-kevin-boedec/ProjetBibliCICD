@@ -1,0 +1,18 @@
+@startuml
+title Recherche d'ouvrage
+actor Utilisateur
+participant Systeme as "Système"
+
+Utilisateur -> "Système" : Rechercher ouvrage
+alt Recherche simple
+  Utilisateur -> "Système" : Saisir titre / nom ouvrage
+else Recherche détaillée
+  Utilisateur -> "Système" : Saisir auteur / année / thème
+end
+"Système" -> "Système" : Exécuter recherche
+alt Résultats trouvés
+  "Système" --> Utilisateur : Liste des ouvrages
+else Aucun résultat
+  "Système" --> Utilisateur : Aucun ouvrage trouvé
+end
+@enduml

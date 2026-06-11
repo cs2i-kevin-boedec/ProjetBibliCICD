@@ -1,0 +1,17 @@
+@startuml
+title Emprunt d'ouvrage
+actor Utilisateur
+participant Systeme as "Système"
+
+Utilisateur -> "Système" : Demander emprunt d'un ouvrage
+"Système" -> "Système" : Vérifier connexion
+"Système" -> "Système" : Vérifier disponibilité exemplaire
+"Système" -> "Système" : Vérifier absence de retard
+"Système" -> "Système" : Vérifier caution suffisante
+alt Emprunt autorisé
+  "Système" -> "Système" : Créer emprunt (15 jours)
+  "Système" --> Utilisateur : Emprunt confirmé
+else Emprunt refusé
+  "Système" --> Utilisateur : Motif de refus
+end
+@enduml

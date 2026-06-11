@@ -1,0 +1,24 @@
+@startuml
+title Consultation de la liste des emprunts — détaillé
+actor Utilisateur
+boundary UI as "Interface Angular"
+control EC as "EmpruntController"
+control ES as "EmpruntService"
+database EMR as "EmpruntRepository"
+
+Utilisateur -> UI : Ouvrir mes emprunts
+UI -> EC : GET /utilisateurs/{id}/emprunts
+EC -> ES : listerEmpruntsUtilisateur(id)
+ES -> EMR : findByUtilisateurId(id)
+EMR --> ES : listeEmprunts
+
+alt Liste trouvée
+  ES --> EC : emprunts
+  EC --> UI : 200 + liste
+  UI --> Utilisateur : Afficher historique complet
+else Erreur technique
+  ES --> EC : erreur
+  EC --> UI : 500
+  UI --> Utilisateur : Message d'erreur
+end
+@enduml

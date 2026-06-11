@@ -1,0 +1,171 @@
+@startuml
+title Diagramme de classes final — Factory Method + Observer
+
+abstract class Utilisateur {
+  +Long id
+  +String nom
+  +String prenom
+  +String adresse
+  +String email
+  +String login
+  +String motDePasse
+  +boolean premiereConnexion
+  +seConnecter(login, motDePasse)
+}
+
+class Etudiant {
+  +int anneeUniversitaire
+}
+
+class Enseignant {
+  +String departement
+}
+
+class Particulier
+
+class Bibliothecaire {
+  +Long id
+  +String nom
+  +String prenom
+  +String email
+  +String login
+  +String motDePasse
+  +boolean premiereConnexion
+  +envoyerMailRappel(emprunt)
+  +update(emprunt)
+}
+
+class Compte {
+  +Long id
+  +double cautionDisponible
+  +debiter(montant)
+  +crediter(montant)
+  +peutEmprunter(cautionOuvrage) boolean
+}
+
+abstract class Ouvrage {
+  +Long id
+  +String titre
+  +String theme
+  +double caution
+  +getExemplaires()
+}
+
+class Livre {
+  +String auteur
+  +String isbn
+  +int anneePublication
+}
+
+class Revue {
+  +int numeroVolume
+  +Date dateParution
+}
+
+class Exemplaire {
+  +Long id
+  +String codeBarre
+  +EtatExemplaire etat
+  +boolean disponible
+  +estDisponible() boolean
+}
+
+class Emprunt {
+  +Long id
+  +Date dateEmprunt
+  +Date dateRetourPrevue
+  +Date dateRetourEffective
+  +StatutEmprunt statut
+  +attacher(obs)
+  +detacher(obs)
+  +notifier()
+  +estEnRetard() boolean
+  +retourner()
+}
+
+class Reservation {
+  +Long id
+  +Date dateReservation
+  +StatutReservation statut
+  +annuler()
+  +terminer()
+}
+
+class EmplacementStockage {
+  +Long id
+  +int travee
+  +int etagere
+  +String niveau
+  +String categorie
+}
+
+abstract class UtilisateurFactory {
+  +creerUtilisateur() Utilisateur
+}
+
+class EtudiantFactory {
+  +creerUtilisateur() Utilisateur
+}
+
+class EnseignantFactory {
+  +creerUtilisateur() Utilisateur
+}
+
+class ParticulierFactory {
+  +creerUtilisateur() Utilisateur
+}
+
+abstract class OuvrageFactory {
+  +creerOuvrage() Ouvrage
+}
+
+class LivreFactory {
+  +creerOuvrage() Ouvrage
+}
+
+class RevueFactory {
+  +creerOuvrage() Ouvrage
+}
+
+interface Observateur {
+  +update(emprunt)
+}
+
+class Controller {
+  +creerUtilisateur(factory)
+  +creerOuvrage(factory)
+  +emprunter()
+  +retourner()
+}
+
+Utilisateur <|-- Etudiant
+Utilisateur <|-- Enseignant
+Utilisateur <|-- Particulier
+Ouvrage <|-- Livre
+Ouvrage <|-- Revue
+
+Utilisateur "1" --> "1" Compte : possède
+Utilisateur "1" --> "0..*" Emprunt : effectue
+Utilisateur "1" --> "0..*" Reservation : effectue
+Emprunt "0..*" --> "1" Exemplaire : concerne
+Reservation "0..*" --> "1" Ouvrage : porte sur
+Exemplaire "0..*" --> "1" Ouvrage : appartient à
+Ouvrage "0..*" --> "1" EmplacementStockage : stocké à
+
+UtilisateurFactory <|-- EtudiantFactory
+UtilisateurFactory <|-- EnseignantFactory
+UtilisateurFactory <|-- ParticulierFactory
+OuvrageFactory <|-- LivreFactory
+OuvrageFactory <|-- RevueFactory
+
+EtudiantFactory ..> Etudiant : crée
+EnseignantFactory ..> Enseignant : crée
+ParticulierFactory ..> Particulier : crée
+LivreFactory ..> Livre : crée
+RevueFactory ..> Revue : crée
+
+Observateur <|.. Bibliothecaire
+Emprunt ..> Observateur : notifie
+Controller ..> UtilisateurFactory : utilise
+Controller ..> OuvrageFactory : utilise
+@enduml

@@ -1,0 +1,90 @@
+<section class="form-container-large">
+  <h1>Ajouter un livre</h1>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>
+        Titre
+        <input [(ngModel)]="titre" name="titre" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Auteur
+        <input [(ngModel)]="auteur" name="auteur" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        ISBN
+        <input [(ngModel)]="isbn" name="isbn" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Année
+        <input [(ngModel)]="anneePublication" name="anneePublication" type="number" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Thème
+        <input [(ngModel)]="theme" name="theme" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Caution
+        <input [(ngModel)]="caution" name="caution" type="number" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Nombre exemplaires
+        <input [(ngModel)]="nombreExemplaires" name="nombreExemplaires" type="number" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Travée
+        <input [(ngModel)]="travee" name="travee" type="number" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Étagère
+        <input [(ngModel)]="etagere" name="etagere" type="number" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Niveau
+        <input [(ngModel)]="niveau" name="niveau" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Catégorie
+        <input [(ngModel)]="categorie" name="categorie" />
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+    </div>
+  </form>
+
+  @if (message()) {
+    <p class="message message-success">{{ message() }}</p>
+  }
+</section>

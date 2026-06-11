@@ -1,0 +1,13 @@
+@startuml
+title Liste des retards + relance mail
+actor Bibliothecaire as "Bibliothécaire"
+participant Systeme as "Système"
+actor Utilisateur
+
+"Bibliothécaire" -> "Système" : Consulter emprunts en retard
+"Système" --> "Bibliothécaire" : Liste des retards
+"Bibliothécaire" -> "Système" : Envoyer relances
+loop Pour chaque emprunt en retard
+  "Système" --> Utilisateur : Mail de rappel
+end
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+title Connexion / première connexion — détaillé
+actor Acteur
+boundary UI as "Interface Angular"
+control AC as "AuthController"
+control AS as "AuthService"
+database UR as "UtilisateurRepository"
+
+Acteur -> UI : Saisir login + mot de passe
+UI -> AC : POST /auth/login
+AC -> AS : authenticate(login, password)
+AS -> UR : findByLogin(login)
+UR --> AS : utilisateur
+AS -> AS : Vérifier mot de passe
+
+alt Première connexion
+  AS --> AC : PASSWORD_CHANGE_REQUIRED
+  AC --> UI : 200 + changement requis
+  UI --> Acteur : Demander nouveau mot de passe
+  Acteur -> UI : Nouveau mot de passe
+  UI -> AC : POST /auth/change-password
+  AC -> AS : changePassword(...)
+  AS -> UR : save(utilisateur)
+  UR --> AS : utilisateurMisAJour
+  AS --> AC : Mot de passe mis à jour
+  AC --> UI : Connexion validée
+  UI --> Acteur : Accès autorisé
+else Connexion standard
+  alt Identifiants valides
+    AS --> AC : Auth OK
+    AC --> UI : Token / session
+    UI --> Acteur : Connexion réussie
+  else Échec
+    AS --> AC : Auth KO
+    AC --> UI : 401 Unauthorized
+    UI --> Acteur : Erreur d'authentification
+  end
+end
+@enduml

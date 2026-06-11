@@ -1,0 +1,30 @@
+@startuml
+title Recherche d'ouvrage — détaillé
+actor Utilisateur
+boundary UI as "Interface Angular"
+control OC as "OuvrageController"
+control OS as "OuvrageService"
+database OR as "OuvrageRepository"
+
+Utilisateur -> UI : Saisir critères de recherche
+alt Recherche simple
+  UI -> OC : GET /ouvrages?titre=...
+  OC -> OS : rechercherSimple(titre)
+else Recherche détaillée
+  UI -> OC : GET /ouvrages?titre=&auteur=&annee=&theme=
+  OC -> OS : rechercherDetaillee(criteres)
+end
+
+OS -> OR : queryByCriteria(...)
+OR --> OS : listeOuvrages
+
+alt Résultats trouvés
+  OS --> OC : résultats
+  OC --> UI : 200 + liste
+  UI --> Utilisateur : Affichage des ouvrages
+else Aucun résultat
+  OS --> OC : liste vide
+  OC --> UI : 200 + []
+  UI --> Utilisateur : Aucun ouvrage trouvé
+end
+@enduml

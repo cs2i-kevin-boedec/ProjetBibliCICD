@@ -1,0 +1,115 @@
+### 1. Créer un utilisateur étudiant
+POST http://localhost:8080/api/utilisateurs
+Content-Type: application/json
+
+{
+  "typeUtilisateur": "ETUDIANT",
+  "nom": "Dupont",
+  "prenom": "Alice",
+  "adresse": "10 rue des Lilas",
+  "email": "alice.dupont@test.fr",
+  "login": "alice",
+  "motDePasse": "alice123",
+  "cautionInitiale": 100.0,
+  "anneeUniversitaire": 3
+}
+
+### 2. Créer un enseignant
+POST http://localhost:8080/api/utilisateurs
+Content-Type: application/json
+
+{
+  "typeUtilisateur": "ENSEIGNANT",
+  "nom": "Martin",
+  "prenom": "Paul",
+  "adresse": "20 avenue Victor Hugo",
+  "email": "paul.martin@test.fr",
+  "login": "pmartin",
+  "motDePasse": "paul123",
+  "cautionInitiale": 150.0,
+  "departement": "Informatique"
+}
+
+
+### 3. Créer un livre
+POST http://localhost:8080/api/ouvrages/livres
+Content-Type: application/json
+
+{
+  "titre": "Java propre",
+  "auteur": "Robert Martin",
+  "isbn": "9780132350884",
+  "anneePublication": 2008,
+  "theme": "informatique",
+  "caution": 20.0,
+  "nombreExemplaires": 3,
+  "travee": 1,
+  "etagere": 2,
+  "niveau": "A",
+  "categorie": "programmation"
+}
+
+### 4. Créer une revue
+POST http://localhost:8080/api/ouvrages/revues
+Content-Type: application/json
+
+{
+  "titre": "Science & Vie",
+  "numeroVolume": 42,
+  "dateParution": "2025-06-15",
+  "theme": "science",
+  "caution": 10.0,
+  "nombreExemplaires": 2,
+  "travee": 2,
+  "etagere": 1,
+  "niveau": "B",
+  "categorie": "revue"
+}
+
+### 5. Lister tous les ouvrages
+GET http://localhost:8080/api/ouvrages
+
+### 6. Rechercher un ouvrage par titre
+GET http://localhost:8080/api/ouvrages/search?titre=java
+
+### 7. Rechercher par auteur
+GET http://localhost:8080/api/ouvrages/search?auteur=martin
+
+### 8. Rechercher par thème
+GET http://localhost:8080/api/ouvrages/search?theme=informatique
+
+### 9. Emprunter un ouvrage
+POST http://localhost:8080/api/emprunts
+Content-Type: application/json
+
+{
+  "utilisateurId": 1,
+  "ouvrageId": 1
+}
+
+### 10. Voir les emprunts de l'utilisateur 1
+GET http://localhost:8080/api/emprunts/utilisateur/1
+
+### 11. Retourner un emprunt
+POST http://localhost:8080/api/retours
+Content-Type: application/json
+
+{
+  "empruntId": 1,
+  "etatExemplaire": "BON"
+}
+
+### 12. Voir les retards
+GET http://localhost:8080/api/retards
+
+### 13. Envoyer les relances
+POST http://localhost:8080/api/retards/relances
+
+### 14. Réserver un ouvrage
+POST http://localhost:8080/api/reservations
+Content-Type: application/json
+
+{
+  "utilisateurId": 1,
+  "ouvrageId": 2
+}

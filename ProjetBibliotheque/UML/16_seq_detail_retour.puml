@@ -1,0 +1,47 @@
+@startuml
+title Retour d'ouvrage — détaillé
+actor Utilisateur
+actor Bibliothecaire as "Bibliothécaire"
+boundary UI as "Interface Angular"
+control RC as "RetourController"
+control ES as "EmpruntService"
+database EMR as "EmpruntRepository"
+database ER as "ExemplaireRepository"
+database CR as "CompteRepository"
+participant OBS as "Observateur"
+
+Utilisateur -> "Bibliothécaire" : Restituer l'exemplaire
+"Bibliothécaire" -> UI : Scanner code barre / saisir emprunt
+UI -> RC : POST /retours
+RC -> ES : retourner(empruntId, etatExemplaire)
+ES -> EMR : findById(empruntId)
+EMR --> ES : emprunt
+ES -> ES : Vérifier retard
+
+alt Retour à temps et bon état
+  ES -> ER : save(exemplaire disponible)
+  ES -> EMR : save(emprunt clôturé)
+  ES -> CR : crediter(caution si nécessaire)
+  ES --> RC : retour validé
+  RC --> UI : 200 OK
+  UI --> "Bibliothécaire" : Retour terminé
+  "Bibliothécaire" --> Utilisateur : Restitution enregistrée
+else Retard
+  ES -> CR : debiter(pénalité/caution)
+  ES -> EMR : notifier()
+  EMR --> OBS : update(retard)
+  ES -> ER : save(exemplaire disponible)
+  ES --> RC : retour avec pénalité
+  RC --> UI : 200 OK
+  UI --> "Bibliothécaire" : Pénalité appliquée
+  "Bibliothécaire" --> Utilisateur : Retour en retard
+else Dégradation
+  ES -> CR : debiter(caution)
+  ES -> ER : save(exemplaire dégradé)
+  ES -> EMR : save(emprunt clôturé)
+  ES --> RC : retour avec retenue
+  RC --> UI : 200 OK
+  UI --> "Bibliothécaire" : Dégradation signalée
+  "Bibliothécaire" --> Utilisateur : Retenue de caution
+end
+@enduml

@@ -1,0 +1,31 @@
+<nav>
+  <a routerLink="/">Ouvrages</a>
+
+  @if (!authService.isLoggedIn()) {
+    | <a routerLink="/login">Connexion</a>
+  }
+
+  @if (authService.isBibliothecaire()) {
+    <span>
+      | <a routerLink="/utilisateurs/create">Créer utilisateur</a>
+      | <a routerLink="/ouvrages/livres/create">Ajouter livre</a>
+      | <a routerLink="/ouvrages/revues/create">Ajouter revue</a>
+      | <a routerLink="/retours/create">Enregistrer retour</a>
+      | <a routerLink="/retards">Retards / Relances</a>
+    </span>
+  }
+
+  @if (authService.isUtilisateur()) {
+    <span>
+      | <a routerLink="/mes-emprunts">Mes emprunts</a>
+    </span>
+  }
+
+  @if (authService.isLoggedIn()) {
+    | <button type="button" (click)="logout()">Déconnexion</button>
+  }
+</nav>
+
+<hr>
+
+<router-outlet></router-outlet>

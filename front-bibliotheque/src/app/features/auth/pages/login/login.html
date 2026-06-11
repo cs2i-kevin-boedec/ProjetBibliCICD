@@ -1,0 +1,52 @@
+<div class="form-container">
+  <h1>Connexion</h1>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>
+        Login
+        <input [(ngModel)]="login" name="login" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Mot de passe
+        <input [(ngModel)]="motDePasse" name="motDePasse" type="password" />
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+      Se connecter
+    </button>
+  </form>
+
+  <!-- Comptes de test -->
+  <div class="mt-4 p-3 bg-light rounded">
+    <h5>Comptes de test</h5>
+
+    <p class="mb-2">
+      <strong>Utilisateur :</strong><br />
+      login : <code>alice</code><br />
+      mot de passe : <code>alice123</code>
+    </p>
+    <button
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      (click)="login='alice'; motDePasse='alice123'">
+      Remplir utilisateur
+    </button>
+
+    <p class="mb-0 mt-3">
+      <strong>Bibliothécaire :</strong><br />
+      login : <code>biblio</code><br />
+      mot de passe : <code>biblio123</code>
+    </p>
+    <button
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      (click)="login='biblio'; motDePasse='biblio123'">
+      Remplir bibliothécaire
+    </button>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+@startuml
+title Emprunt d'ouvrage — détaillé
+actor Utilisateur
+boundary UI as "Interface Angular"
+control EC as "EmpruntController"
+control ES as "EmpruntService"
+database UR as "UtilisateurRepository"
+database OR as "OuvrageRepository"
+database ER as "ExemplaireRepository"
+database EMR as "EmpruntRepository"
+database CR as "CompteRepository"
+
+Utilisateur -> UI : Demander emprunt d'un ouvrage
+UI -> EC : POST /emprunts
+EC -> ES : emprunter(utilisateurId, ouvrageId)
+
+ES -> UR : findById(utilisateurId)
+UR --> ES : utilisateur
+ES -> OR : findById(ouvrageId)
+OR --> ES : ouvrage
+ES -> EMR : findEmpruntsActifsByUtilisateur(utilisateurId)
+EMR --> ES : empruntsActifs
+ES -> ER : findPremierDisponibleByOuvrage(ouvrageId)
+ER --> ES : exemplaireDisponible
+
+ES -> ES : Vérifier retard
+ES -> ES : Vérifier non double emprunt même ouvrage
+ES -> ES : Vérifier caution suffisante
+
+alt Emprunt autorisé
+  ES -> CR : debiter(caution)
+  CR --> ES : compteMisAJour
+  ES -> EMR : save(emprunt 15 jours)
+  EMR --> ES : empruntCréé
+  ES -> ER : save(exemplaire indisponible)
+  ER --> ES : exemplaireMisAJour
+  ES --> EC : Emprunt confirmé
+  EC --> UI : 201 Created
+  UI --> Utilisateur : Confirmation + date retour
+else Utilisateur en retard
+  ES --> EC : Refus - utilisateur en retard
+  EC --> UI : 409 Conflict
+  UI --> Utilisateur : Emprunt refusé
+else Même ouvrage déjà emprunté
+  ES --> EC : Refus - déjà emprunté
+  EC --> UI : 409 Conflict
+  UI --> Utilisateur : Emprunt refusé
+else Caution insuffisante
+  ES --> EC : Refus - caution insuffisante
+  EC --> UI : 409 Conflict
+  UI --> Utilisateur : Emprunt refusé
+else Aucun exemplaire
+  ES --> EC : Refus - aucun exemplaire disponible
+  EC --> UI : 404/409
+  UI --> Utilisateur : Aucun exemplaire disponible
+end
+@enduml
