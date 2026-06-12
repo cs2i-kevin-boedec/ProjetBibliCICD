@@ -110,6 +110,28 @@
                     </excludes>
                 </configuration>
             </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>8.3.3</version>
+                    <configuration>
+                        <formats>
+                            <format>HTML</format>
+                            <format>XML</format>
+                        </formats>
+                        <!-- Fail the build for high severity CVSS (>=7.0) -->
+                        <failBuildOnCVSS>7</failBuildOnCVSS>
+                        <!-- Use local DB cache to speed repeated runs (in CI you may want to clear this) -->
+                        <dataDirectory>${project.build.directory}/dependency-check-data</dataDirectory>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
         </plugins>
     </build>
 </project>
