@@ -14,6 +14,11 @@ if ! command -v docker >/dev/null 2>&1; then
   exit 1
 fi
 
+# S'assurer que l'utilisateur courant a les droits sur le dossier du projet (silencieux si non applicable)
+if command -v chmod >/dev/null 2>&1; then
+  chmod -R u+rwX "$DIR/ProjetBibliotheque" 2>/dev/null || true
+fi
+
 if docker compose version >/dev/null 2>&1; then
   docker compose -f "$COMPOSE_FILE" down --volumes --remove-orphans
 else

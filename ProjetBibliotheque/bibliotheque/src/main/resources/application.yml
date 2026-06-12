@@ -1,9 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres:5432/bibliotheque
+    url: jdbc:postgresql://localhost:5432/bibliotheque
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: false
 
   jpa:
     hibernate:

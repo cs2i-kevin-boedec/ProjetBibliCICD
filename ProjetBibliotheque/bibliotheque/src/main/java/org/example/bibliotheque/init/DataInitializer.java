@@ -1,6 +1,7 @@
 package org.example.bibliotheque.init;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.bibliotheque.entity.*;
 import org.example.bibliotheque.enums.EtatExemplaire;
 import org.example.bibliotheque.enums.StatutEmprunt;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     private final UtilisateurRepository utilisateurRepository;
@@ -27,7 +29,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.info("DataInitializer starting: utilisateur count={}, ouvrage count={}", utilisateurRepository.count(), ouvrageRepository.count());
         if (utilisateurRepository.count() > 0 || ouvrageRepository.count() > 0) {
+            log.info("Data already present, skipping initialization.");
             return;
         }
 
@@ -214,6 +218,7 @@ public class DataInitializer implements CommandLineRunner {
         reservation.setDateReservation(LocalDate.now());
         reservation.setStatut(StatutReservation.ACTIVE);
         reservationRepository.save(reservation);
+        log.info("DataInitializer finished: inserted sample users={}, ouvrages={}", utilisateurRepository.count(), ouvrageRepository.count());
     }
 
     private void createExemplaire(Ouvrage ouvrage, boolean disponible) {
