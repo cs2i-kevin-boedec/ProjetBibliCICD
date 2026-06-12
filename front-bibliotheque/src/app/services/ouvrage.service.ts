@@ -2,12 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ouvrage } from '../models/ouvrage.model';
+import {apiUrl,apiOuvrages} from '../../constante';
 
 @Injectable({ providedIn: 'root' })
 export class OuvrageService {
   private http = inject(HttpClient);
 
-  private api = 'http://localhost:8080/api/ouvrages';
+  private api = apiUrl + apiOuvrages;
 
   findAll(): Observable<Ouvrage[]> {
     return this.http.get<Ouvrage[]>(this.api);

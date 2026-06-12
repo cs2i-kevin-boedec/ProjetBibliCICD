@@ -2,10 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Utilisateur } from '../models/utilisateur.model';
+import { apiUrl,apiUtilisateurs } from '../../constante';
 
 @Injectable({ providedIn: 'root' })
 export class UtilisateurService {
-  private api = 'http://localhost:8080/api/utilisateurs';
+  private api = apiUrl + apiUtilisateurs;
   private http = inject(HttpClient);
 
   create(request: unknown): Observable<Utilisateur> {
