@@ -2,13 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Emprunt } from '../models/emprunt.model';
-import {apiUrl,apiEmprunts} from '../../constante';
+import {apiEmprunts} from '../../constante';
 
 @Injectable({ providedIn: 'root' })
 export class EmpruntService {
   private http = inject(HttpClient);
 
-  private api = apiUrl + apiEmprunts;
+  private api =  apiEmprunts;
 
   create(request: { utilisateurId: number; ouvrageId: number }): Observable<Emprunt> {
     return this.http.post<Emprunt>(`${this.api}/emprunts`, request);

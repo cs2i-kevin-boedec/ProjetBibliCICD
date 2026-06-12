@@ -1,4 +1,4 @@
-export const apiUrl = '/api';
+export const apiUrl = 'http://backend:8080/api';
 export const apiAuth = `${apiUrl}/auth`;
 export const apiEmprunts = `${apiUrl}/emprunts`;
 export const apiOuvrages = `${apiUrl}/ouvrages`;
