@@ -86,8 +86,8 @@ sont effectuées dans les jobs avant le build/test.
 
 API documentation (Swagger)
 ---------------------------
-Actuellement, la génération d'API documentation (Swagger/OpenAPI) n'est pas
-activée dans le backend. Cette amélioration est notée comme tâche à implémenter.
+Actuellement, la génération d'API documentation (Swagger/OpenAPI) est documenté a cette adresse:
+http://localhost:8080/swagger-ui/index.html
 
 Voir et utiliser le projet
 -------------------------
@@ -127,6 +127,7 @@ Tests
 - Frontend : `cd front-bibliotheque && npm test`
 - Backend : `cd ProjetBibliotheque/bibliotheque && ./mvnw test`
 
-
-
-GSCR -> github pousser les images docker, pas besoin de build local, 
+ajout possible : 
+GSCR -> github pousser les images docker, pas besoin de build local
+ajouter makerfile
+dependancy-check (OWASP)
